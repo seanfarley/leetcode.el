@@ -1249,6 +1249,7 @@ major mode by `leetcode-prefer-language'and `auto-mode-alist'."
   (let-alist problem
     (let* ((title (leetcode-problem-title problem-info))
            (problem-id (leetcode-problem-id problem-info))
+           (detail-buf-name (leetcode--detail-buffer-name problem-id))
            (testcase-buf-name (leetcode--testcase-buffer-name problem-id))
            (result-buf-name (leetcode--result-buffer-name problem-id))
            (snippets (append .codeSnippets nil))
@@ -1284,6 +1285,8 @@ major mode by `leetcode-prefer-language'and `auto-mode-alist'."
                         '((display-buffer-reuse-window
                            leetcode--display-code)
                           (reusable-frames . visible))))
+      (with-current-buffer (get-buffer detail-buf-name)
+        (set-window-buffer leetcode--description-window (current-buffer)))
       (with-current-buffer (get-buffer-create testcase-buf-name)
         (erase-buffer)
         (insert testcase)
