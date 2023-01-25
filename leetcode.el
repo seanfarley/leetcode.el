@@ -123,6 +123,14 @@ mysql, mssql, oraclesql."
   :group 'leetcode
   :type 'boolean)
 
+(defcustom leetcode-start-coding-hook nil
+  "Hook run after leetcode opens a problem.
+
+The hook is passed the detail window, the testcase window, and
+the results window."
+  :group 'leetcode
+  :type 'hook)
+
 (cl-defstruct leetcode-user
   "A LeetCode User.
 The object with following attributes:
@@ -1293,7 +1301,12 @@ major mode by `leetcode-prefer-language'and `auto-mode-alist'."
         (set-window-buffer leetcode--testcase-window (current-buffer)))
       (with-current-buffer (get-buffer-create result-buf-name)
         (erase-buffer)
-        (set-window-buffer leetcode--result-window (current-buffer))))))
+        (set-window-buffer leetcode--result-window (current-buffer)))
+
+      (run-hook-with-args 'leetcode-start-coding-hook
+                          leetcode--description-window
+                          leetcode--testcase-window
+                          leetcode--result-window))))
 
 (aio-defun leetcode-restore-layout ()
   "This command should be run in LeetCode code buffer.
